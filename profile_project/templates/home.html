@@ -4,6 +4,7 @@
         <ul>
             {% if user.is_authenticated %}
                 <li><a href="{% url 'views.profile_page' %}">Profile Page</a></li>
+                <li><a href="{% url 'accounts:password_edit' %}">Change Password</a></li>
             {% endif %}
         </ul>
     </div>
