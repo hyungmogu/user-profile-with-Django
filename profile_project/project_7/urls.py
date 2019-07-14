@@ -20,7 +20,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from . import views
 
 urlpatterns = [
-    url(r'^profile/(?P<user_pk>\d+)/$', views.profile_page,
+    url(r'^profile/', views.profile_page,
         name='profile'),
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('accounts.urls', namespace='accounts')),

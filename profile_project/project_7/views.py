@@ -1,4 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 from accounts import forms
 
@@ -7,11 +9,11 @@ def home(request):
     return render(request, 'home.html')
 
 
-# TODO: Restrict access to profile_page to logged in users only
-# NOTE: Currently accessible by typing 'http://127.0.0.1:8000/profile/1/'
-def profile_page(request, user_pk):
-    # TODO: get information about the user and prepopulate here
-    form = forms.ProfileForm()
+# TODO: Create a 'submit' button on view that performs request.POST action on save
+@login_required
+def profile_page(request):
+    user = get_object_or_404(User, pk=request.user.pk)
+    form = forms.ProfileForm(instance=user)
 
     if request.method == 'POST':
         form = forms.ProfileForm(request.POST)
@@ -19,8 +21,8 @@ def profile_page(request, user_pk):
         if form.is_valid():
             form.save()
 
-            # TODO: Replace HttpResponseRedirect('home') with something more proper
-            return HttpResponseRedirect('home')
+            return HttpResponseRedirect(reverse('home'))
+
     return render(request, 'profile.html', {
         'form': form
     })
