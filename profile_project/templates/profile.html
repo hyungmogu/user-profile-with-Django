@@ -5,7 +5,7 @@
         <ul>
             {% if user.is_authenticated %}
                 <li><a href="{% url 'views.profile_edit' %}">Edit Profile</a></li>
-                <li><a href="{% url 'accounts:password_edit' %}">Change Password</a></li>
+                <li><a href="{% url 'views.profile_password_edit' %}">Change Password</a></li>
             {% endif %}
         </ul>
     </div>
@@ -30,7 +30,7 @@
 
         <!-- bio -->
         <h4>Short Bio:</h4>
-        <p>{{ profile.short_bio }}</p>
+        <p>{{ profile.short_bio | linebreaks }}</p>
 
         <!-- avatar -->
         <h4>Avatar:</h4>

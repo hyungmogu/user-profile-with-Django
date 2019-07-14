@@ -22,6 +22,8 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from . import views
 
 urlpatterns = [
+    url(r'^profile/password/edit$', views.profile_password_edit,
+        name='profile_password_edit'),
     url(r'^profile/edit', views.profile_edit,
         name='profile_edit'),
     url(r'^profile/', views.profile_view,

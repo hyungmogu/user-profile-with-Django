@@ -2,12 +2,10 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import (
     AuthenticationForm,
-    UserCreationForm,
-    PasswordChangeForm)
+    UserCreationForm)
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
 
 
 def sign_in(request):
@@ -58,42 +56,3 @@ def sign_out(request):
     logout(request)
     messages.success(request, "You've been signed out. Come back soon!")
     return HttpResponseRedirect(reverse('home'))
-
-
-@login_required
-def password_edit(request):
-    form = PasswordChangeForm(user=request.user)
-
-    if request.method == 'POST':
-        # check if user is currently logged in before proceeding
-        if not request.user.is_active:
-            messages.error(
-                request,
-                "User must be logged in to change password"
-            )
-
-            return HttpResponseRedirect(reverse('home'))
-
-        form = PasswordChangeForm(data=request.POST, user=request.user)
-
-        if form.is_valid():
-            form.save()
-
-            # re-auth user to circumvent force log-out issue
-            user = authenticate(
-                username=request.user,
-                password=form.cleaned_data['new_password1']
-            )
-
-            login(request, user)
-
-            messages.success(
-                request,
-                "Password change is successful!"
-            )
-
-            return HttpResponseRedirect(reverse('home'))
-
-    return render(request, 'accounts/password_edit.html', {
-        'form': form
-    })
