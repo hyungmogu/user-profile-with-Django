@@ -22,8 +22,10 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from . import views
 
 urlpatterns = [
-    url(r'^profile/', views.profile_page,
-        name='profile'),
+    url(r'^profile/edit', views.profile_edit,
+        name='profile_edit'),
+    url(r'^profile/', views.profile_view,
+        name='profile_view'),
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('accounts.urls', namespace='accounts')),
     url(r'^$', views.home, name='home')

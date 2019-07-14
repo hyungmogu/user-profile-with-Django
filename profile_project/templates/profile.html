@@ -1,8 +1,42 @@
 {% extends 'layout.html' %}
+{% load static %}
 {% block body %}
-    <form enctype="multipart/form-data" method="POST" action="{% url 'views.profile_page' %}">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Update">
-    </form>
+    <div class="grid-25">
+        <ul>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'views.profile_edit' %}">Edit Profile</a></li>
+                <li><a href="{% url 'accounts:password_edit' %}">Change Password</a></li>
+            {% endif %}
+        </ul>
+    </div>
+    <div class="grid-75">
+        <h1>User Profile - {{user.username}}</h1>
+
+        <!-- first name -->
+        <h4>First Name:</h4>
+        <p>{{ profile.first_name }}</p>
+
+        <!-- last name -->
+        <h4>Last Name:</h4>
+        <p>{{ profile.last_name }}</p>
+
+        <!-- email -->
+        <h4>Email:</h4>
+        <p>{{ profile.email }}</p>
+
+        <!-- date of birth -->
+        <h4>Date of Birth:</h4>
+        <p>{{ profile.date_of_birth }}</p>
+
+        <!-- bio -->
+        <h4>Short Bio:</h4>
+        <p>{{ profile.short_bio }}</p>
+
+        <!-- avatar -->
+        <h4>Avatar:</h4>
+        {% if profile.avatar %}
+            <img class="circle--primary--avatar " src="/media/{{ profile.avatar }}"/>
+        {% endif %}
+
+    </div>
 {% endblock %}

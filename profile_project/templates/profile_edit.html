@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+{% block body %}
+    <div class="grid-25">
+        <ul>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'views.profile_view' %}">Back to Profile</a></li>
+                <li><a href="{% url 'accounts:password_edit' %}">Change Password</a></li>
+            {% endif %}
+        </ul>
+    </div>
+    <div class="grid-75">
+        <h1>Edit Profile</h1>
+
+        <form enctype="multipart/form-data" method="POST" action="{% url 'views.profile_edit' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Update">
+        </form>
+    </div>
+{% endblock %}

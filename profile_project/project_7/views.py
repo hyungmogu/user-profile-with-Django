@@ -13,7 +13,21 @@ def home(request):
 
 
 @login_required
-def profile_page(request):
+def profile_view(request):
+    # check if user has a profile
+    # if the user doesn't have a profile, create a new one with empty fields
+    try:
+        profile = models.Profile.objects.get(user=request.user)
+    except models.Profile.DoesNotExist:
+        profile = models.Profile.objects.create(user=request.user)
+
+    return render(request, 'profile.html', {
+        'profile': profile
+    })
+
+
+@login_required
+def profile_edit(request):
     try:
         profile = models.Profile.objects.get(user=request.user)
         form = forms.ProfileForm(instance=profile)
@@ -32,8 +46,8 @@ def profile_page(request):
                 "Profile information has been updated successfully"
             )
 
-            return HttpResponseRedirect(reverse('profile'))
+            return HttpResponseRedirect(reverse('profile_view'))
 
-    return render(request, 'profile.html', {
+    return render(request, 'profile_edit.html', {
         'form': form
     })
