@@ -30,14 +30,11 @@ This is the seventh project to team tree house's Python Web Tech Degree.
 
 
 ## Steps to Running/Exiting the Program
-1. Install pipenv by typing `pip install pipenv` or `pip3 install pipenv` for python3 users
+1. If not installed, install pipenv by typing `pip install pipenv` or `pip3 install pipenv` for python3 users
 2. In project root folder, install dependencies by typing `pipenv install`
 3. In project root folder, enter virtual environment by typing `pipenv shell`
-4. In `profile_project` of project root folder, run `python manage.py migrate` or `python3 manage.py migrate` for python3 users.
-5. In `profile_project` of project root folder, run by typing `python manage.py runserver` or `python3 manage.py runserver` for python3 users.
+4. In `profile_project` of project root folder, run `python manage.py makemigrations accounts`
+4. In `profile_project` of project root folder, run `python manage.py migrate`
+5. In `profile_project` of project root folder, run by typing `python manage.py runserver`
 6. Open chrome and enter the url shown on console (i.e. `http://127.0.0.1:8000/`)
 7. Once done, exit django by pressing `Ctrl`+`C` and virtual environment by typing `exit`
-
-## FAQ
-1. Q: How would a user know which version of python is installed as default?
-    - A: Python version can be found by typing `python --version` in terminal. If X in `X.*.*` is 2, then python 2 is installed as default, and if it's 3, then python 3 is being used as default.
