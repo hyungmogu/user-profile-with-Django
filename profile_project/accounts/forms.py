@@ -31,7 +31,6 @@ def contains_special_characters(value):
 
     return True
 
-
 class ChangePasswordForm(forms.Form):
     current_password = forms.CharField(widget=forms.PasswordInput)
     new_password = forms.CharField(widget=forms.PasswordInput)
@@ -53,13 +52,7 @@ class ChangePasswordForm(forms.Form):
                 'Entered password is incorrect'
             )
 
-        validate_password(
-            new_pw,
-            user=self.user,
-            password_validators=[
-                MinimumLengthValidator(14),
-                UserAttributeSimilarityValidator
-            ])
+        validate_password(new_pw, user=self.user)
 
         # if new password doesn't have combination of lower and uppercase
         # letters, then raise error
