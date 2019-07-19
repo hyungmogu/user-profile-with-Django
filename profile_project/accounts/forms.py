@@ -13,12 +13,30 @@ from . import models
 
 # Custom Validators
 def contains_combination_upper_lower(value):
+    """
+    Checks if a string contains both uppercase and lowercase letters
+
+    Args:
+        value: user password (strng)
+
+    Returns:
+        Boolean
+    """
     if not re.search(r'[a-z]+', value) or not re.search(r'[A-Z]+', value):
         return False
     return True
 
 
 def contains_numerical_digits(value):
+    """
+    Checks if a string contains numerical digits
+
+    Args:
+        value: user password (strng)
+
+    Returns:
+        Boolean
+    """
     if not re.search(r'[0-9]+', value):
         return False
 
@@ -26,10 +44,20 @@ def contains_numerical_digits(value):
 
 
 def contains_special_characters(value):
+    """
+    Checks if a string contains special characters (non-alphanumerical symbols)
+
+    Args:
+        value: user password (strng)
+
+    Returns:
+        Boolean
+    """
     if not re.search(r'[^a-zA-Z0-9]+', value):
         return False
 
     return True
+
 
 class ChangePasswordForm(forms.Form):
     current_password = forms.CharField(widget=forms.PasswordInput)
@@ -42,6 +70,27 @@ class ChangePasswordForm(forms.Form):
         super(ChangePasswordForm, self).__init__(*args, **kwargs)
 
     def clean(self):
+        """
+        Checks if validation for ChangePasswordForm satisfies the following
+        criteria
+            - Must not be the same as the current password
+            - Minimum password length of 14 characters.
+            - Must use of both uppercase and lowercase letters
+            - Must include of one or more numerical digits
+            - Must include of special characters, such as @, #, $
+            - Cannot contain the username or parts of thde user’s full name,
+            such as his first name
+
+        Args:
+            None
+
+        Return:
+            None
+
+        Raises:
+            Validation Error if any one of the above criteria are not met
+        """
+
         current_pw = self.cleaned_data.get('current_password', '')
         new_pw = self.cleaned_data.get('new_password', '')
         confirm_pw = self.cleaned_data.get('confirm_password', '')
@@ -101,14 +150,29 @@ class ProfileForm(forms.ModelForm):
         ]
 
     def clean(self):
+        """
+        Checks if validation for ProfileForm satisfies the following criteria
+            - Date of birth accepts three formats  YYYY-MM-DD, MM/DD/YYYY, or
+            MM/DD/YY (see input_format in date_of_birth)
+            - Email validation checks if the email addresses match and is a
+            valid format
+            - Text field validation checks for characters longer than 10
+            characters and ensuring HTML
+
+        Args:
+            None
+
+        Return:
+            None
+
+        Raises:
+            Validation Error if any one of the above criteria are not met
+        """
+
         # get sanitized data
         email = self.cleaned_data['email']
         email_verify = self.cleaned_data['confirm_email']
 
-        # check and see if it satiesfies the validation criteria
-        # 1. email adresss and confirm email match
-        # 2. both email and confirm email are of correct format
-        # [done by EmailField]
         if (email or email_verify) and email != email_verify:
             raise forms.ValidationError((
                     'Please ensure that Confirm Email and '

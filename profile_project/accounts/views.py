@@ -34,6 +34,17 @@ def sign_in(request):
 
 
 def sign_up(request):
+    """
+    Renders and processes signup page. Only accounts satisfying the following
+    password criteria are generated:
+        - Must not be the same as the current password
+        - Minimum password length of 14 characters.
+        - Must use of both uppercase and lowercase letters
+        - Must include of one or more numerical digits
+        - Must include of special characters, such as @, #, $
+        - Cannot contain parts or all of the username
+    """
+
     form = UserCreationForm()
     if request.method == 'POST':
         form = UserCreationForm(data=request.POST)
