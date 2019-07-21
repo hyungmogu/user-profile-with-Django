@@ -11,6 +11,29 @@ from django.contrib.auth.password_validation import (
 from . import models
 
 
+def contains_first_or_last_name_or_username(value, user, profile):
+    """
+    Checks if password contains first last or username
+
+    Args:
+        value: user password (strng)
+
+    Returns:
+        Boolean
+    """
+
+    if profile.first_name.lower() in value.lower():
+        return True
+
+    if profile.last_name.lower() in value.lower():
+        return True
+
+    if user.username.lower() in value.lower():
+        return True
+
+    return False
+
+
 # Custom Validators
 def contains_combination_upper_lower(value):
     """
@@ -66,7 +89,9 @@ class ChangePasswordForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')
+        profile = kwargs.pop('profile')
         self.user = user
+        self.profile = profile
         super(ChangePasswordForm, self).__init__(*args, **kwargs)
 
     def clean(self):
@@ -96,12 +121,24 @@ class ChangePasswordForm(forms.Form):
         confirm_pw = self.cleaned_data.get('confirm_password', '')
 
         # if current password is not correct, then raise validation error
-        if not current_pw or not self.user.check_password(current_pw):
+        # if new password has length less than 14, then raise validation error
+        if len(new_pw) < 14:
+            raise forms.ValidationError(
+                'Password must be more than 14 characters'
+            )
+
+        if not current_pw or not current_pw == self.user.password:
             raise forms.ValidationError(
                 'Entered password is incorrect'
             )
 
-        validate_password(new_pw, user=self.user)
+        if contains_first_or_last_name_or_username(
+                new_pw,
+                self.user,
+                self.profile):
+            raise forms.ValidationError(
+                'Entered password must not contain first or last name '
+                'nor username')
 
         # if new password doesn't have combination of lower and uppercase
         # letters, then raise error

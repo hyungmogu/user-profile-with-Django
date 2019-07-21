@@ -83,8 +83,10 @@ def profile_password_edit(request):
         as his first name
     """
 
-    user = request.user
-    form = forms.ChangePasswordForm(user=user)
+    try:
+        profile = models.Profile.objects.get(user=request.user)
+    except models.Profile.DoesNotExist:
+        profile = models.Profile.objects.create(user=request.user)
 
     if request.method == 'POST':
         # check if user is currently logged in before proceeding
@@ -96,7 +98,11 @@ def profile_password_edit(request):
 
             return HttpResponseRedirect(reverse('home'))
 
-        form = forms.ChangePasswordForm(request.POST, user=user)
+        form = forms.ChangePasswordForm(
+            request.POST,
+            user=user,
+            profile=profile)
+
         if form.is_valid():
             user.set_password(form.cleaned_data['new_password'])
             user.save()
