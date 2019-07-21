@@ -83,10 +83,14 @@ def profile_password_edit(request):
         as his first name
     """
 
+    user = request.user
+
     try:
-        profile = models.Profile.objects.get(user=request.user)
+        profile = models.Profile.objects.get(user=user)
     except models.Profile.DoesNotExist:
-        profile = models.Profile.objects.create(user=request.user)
+        profile = models.Profile.objects.create(user=user)
+
+    form = forms.ChangePasswordForm(user=user, profile=profile)
 
     if request.method == 'POST':
         # check if user is currently logged in before proceeding

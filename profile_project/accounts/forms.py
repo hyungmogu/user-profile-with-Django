@@ -127,7 +127,7 @@ class ChangePasswordForm(forms.Form):
                 'Password must be more than 14 characters'
             )
 
-        if not current_pw or not current_pw == self.user.password:
+        if not current_pw or not self.user.check_password(current_pw):
             raise forms.ValidationError(
                 'Entered password is incorrect'
             )
